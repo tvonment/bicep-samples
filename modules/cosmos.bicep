@@ -1,15 +1,19 @@
-@description('The name of the Cosmos DB')
-param cosmosDBAccountName string = 'bicep-samples-${uniqueString(resourceGroup().id)}'
-
 @description('Prefix for resources')
 param prefix string
+
+@description('Is a Serverless Deployment')
+param isServerless bool = true
+
+@description('The name of the Cosmos DB')
+param cosmosDBAccountName string = '${prefix}-cosmos-${uniqueString(resourceGroup().id)}'
 
 @description('The Azure region into which the resources should be deployed.')
 param location string = resourceGroup().location
 
 var cosmosDBDatabaseName = '${prefix}-db'
+var cosmosDBDatabaseThroughput = 400
 var cosmosDBContainerName = '${prefix}-container'
-var cosmosDBContainerPartitionKey = '/someCoolPartitionKey'
+var cosmosDBContainerPartitionKey = '/id'
 
 resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2021-10-15' = {
   name: cosmosDBAccountName
@@ -22,9 +26,9 @@ resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2021-10-15' = {
       }
     ]
     capabilities: [
-      {
+      isServerless ? {
         name: 'EnableServerless'
-      }
+      } : {}
     ]
   }
   resource cosmosDBDatabase 'sqlDatabases' = {
@@ -32,6 +36,9 @@ resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2021-10-15' = {
     properties: {
       resource: {
         id: cosmosDBDatabaseName
+      }
+      options: isServerless ? {} : {
+        throughput: cosmosDBDatabaseThroughput
       }
     }
     resource container 'containers' = {

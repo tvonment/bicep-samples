@@ -4,42 +4,43 @@ targetScope = 'subscription'
 param location string = deployment().location
 
 @description('The Prefix for the Resources')
-param prefix string = 'bicep-samples'
+param prefix string = 'samples'
 
 @description('Name of the Resource Group')
-param rGroupName string = 'rg-${prefix}-webapp-cosmos-cdn'
-
-var deployCdn = true
+param rGroupName string = 'rg-${prefix}-staticwebapp-azfunction-cosmos'
 
 resource rGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: rGroupName
   location: location
 }
 
+/*
 module cosmos 'modules/cosmos.bicep' = {
   scope: resourceGroup(rGroup.name)
   name: '${deployment().name}-cosmos'
   params: {
     location: location
     prefix: prefix
+    isServerless: false
   }
 }
+*/
 
-module webapp 'modules/webapp.bicep' = {
+module azfunction 'modules/azfunction.bicep' = {
   scope: resourceGroup(rGroup.name)
-  name: '${deployment().name}-webapp'
+  name: '${deployment().name}-azfunction'
   params: {
     location: location
     prefix: prefix
-    cosmosDBAccountName: cosmos.outputs.cosmosDBAccountName
+    //cosmosDBAccountName: cosmos.outputs.cosmosDBAccountName
   }
 }
 
-module cdn 'modules/cdn.bicep' = if (deployCdn) {
+module staticwebapp 'modules/staticwebapp.bicep' = {
   scope: resourceGroup(rGroup.name)
-  name: '${deployment().name}-cdn'
+  name: '${deployment().name}-staticwebapp'
   params: {
-    originHostName: webapp.outputs.appServiceAppHostName
     prefix: prefix
+    location: location
   }
 }

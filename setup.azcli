@@ -6,4 +6,4 @@ az bicep install && az bicep upgrade
 az login --use-device-code
 az account show
 az account set --subscription MPN150
-az deployment sub create --template-file main.bicep -l switzerlandnorth
+az deployment sub create --template-file main.bicep -l eastus -n swa-us
