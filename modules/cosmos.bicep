@@ -7,18 +7,22 @@ param isServerless bool = true
 @description('The name of the Cosmos DB')
 param cosmosDBAccountName string = '${prefix}-cosmos-${uniqueString(resourceGroup().id)}'
 
+@description('The Throughput of the Cosmos Database')
+@minValue(400)
+@maxValue(10000)
+param cosmosDBDatabaseThroughput int = 400
+
 @description('The Azure region into which the resources should be deployed.')
 param location string = resourceGroup().location
 
 var cosmosDBDatabaseName = '${prefix}-db'
-var cosmosDBDatabaseThroughput = 400
 var cosmosDBContainerName = '${prefix}-container'
 var cosmosDBContainerPartitionKey = '/id'
 
 resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2021-10-15' = {
   name: cosmosDBAccountName
   location: location
-  properties: {
+  properties: isServerless ? {
     databaseAccountOfferType: 'Standard'
     locations: [
       {
@@ -26,11 +30,19 @@ resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2021-10-15' = {
       }
     ]
     capabilities: [
-      isServerless ? {
+      {
         name: 'EnableServerless'
-      } : {}
+      }
+    ]
+  } : {
+    databaseAccountOfferType: 'Standard'
+    locations: [
+      {
+        locationName: location
+      }
     ]
   }
+
   resource cosmosDBDatabase 'sqlDatabases' = {
     name: cosmosDBDatabaseName
     properties: {

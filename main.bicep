@@ -7,14 +7,13 @@ param location string = deployment().location
 param prefix string = 'samples'
 
 @description('Name of the Resource Group')
-param rGroupName string = 'rg-${prefix}-staticwebapp-azfunction-cosmos'
+param rGroupName string = 'rg-${prefix}-azfunction-cosmos'
 
 resource rGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: rGroupName
   location: location
 }
 
-/*
 module cosmos 'modules/cosmos.bicep' = {
   scope: resourceGroup(rGroup.name)
   name: '${deployment().name}-cosmos'
@@ -24,7 +23,6 @@ module cosmos 'modules/cosmos.bicep' = {
     isServerless: false
   }
 }
-*/
 
 module azfunction 'modules/azfunction.bicep' = {
   scope: resourceGroup(rGroup.name)
@@ -32,15 +30,6 @@ module azfunction 'modules/azfunction.bicep' = {
   params: {
     location: location
     prefix: prefix
-    //cosmosDBAccountName: cosmos.outputs.cosmosDBAccountName
-  }
-}
-
-module staticwebapp 'modules/staticwebapp.bicep' = {
-  scope: resourceGroup(rGroup.name)
-  name: '${deployment().name}-staticwebapp'
-  params: {
-    prefix: prefix
-    location: location
+    cosmosDBAccountName: cosmos.outputs.cosmosDBAccountName
   }
 }
