@@ -1,7 +1,6 @@
 param prefix string
 param functionAppName string = '${prefix}-azfunction-${uniqueString(resourceGroup().id)}'
 param hostingPlanName string = '${prefix}-azfunction-plan'
-param cosmosDBAccountName string
 
 @description('Storage Account type')
 @allowed([
@@ -23,10 +22,6 @@ param runtime string = 'node'
 
 var storageAccountName = 'strg${uniqueString(resourceGroup().id)}'
 var functionWorkerRuntime = runtime
-
-resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2022-02-15-preview' existing = {
-  name: cosmosDBAccountName
-}
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
   name: storageAccountName
@@ -70,10 +65,6 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: functionWorkerRuntime
         }
-        /*{
-          name: 'COSMOS_DB_CONNECTIONSTRING'
-          value: cosmosDBAccount.listConnectionStrings().connectionStrings[0].connectionString
-        }*/
       ]
       minTlsVersion: '1.2'
     }

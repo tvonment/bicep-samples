@@ -11,21 +11,11 @@ param pat string
 param prefix string = 'samples'
 
 @description('Name of the Resource Group')
-param rGroupName string = 'rg-${prefix}-staticwebapp-azfunction-cosmos'
+param rGroupName string = 'rg-${prefix}-staticwebapp-azfunction'
 
 resource rGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: rGroupName
   location: location
-}
-
-module cosmos 'modules/cosmos.bicep' = {
-  scope: resourceGroup(rGroup.name)
-  name: '${deployment().name}-cosmos'
-  params: {
-    location: location
-    prefix: prefix
-    isServerless: false
-  }
 }
 
 module azfunction 'modules/azfunction.bicep' = {
@@ -34,7 +24,6 @@ module azfunction 'modules/azfunction.bicep' = {
   params: {
     location: location
     prefix: prefix
-    cosmosDBAccountName: cosmos.outputs.cosmosDBAccountName
   }
 }
 

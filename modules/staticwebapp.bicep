@@ -20,7 +20,7 @@ resource staticwebapp 'Microsoft.Web/staticSites@2021-03-01' = {
   }
   properties: {
     repositoryUrl: 'https://github.com/tvonment/bicep-samples/'
-    branch: 'staticwebapp-azfunction-cosmos'
+    branch: 'staticwebapp-azfunction'
     repositoryToken: pat
     stagingEnvironmentPolicy: 'Enabled'
     allowConfigFileUpdates: true
