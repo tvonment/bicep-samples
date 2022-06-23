@@ -29,7 +29,7 @@ resource staticwebapp 'Microsoft.Web/staticSites@2021-03-01' = {
     buildProperties: {
       appLocation: '/'
       apiLocation: ''
-      appArtifactLocation: 'src'
+      appArtifactLocation: ''
     }
   }
 }
