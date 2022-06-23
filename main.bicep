@@ -3,6 +3,10 @@ targetScope = 'subscription'
 @description('The Azure region into which the resources should be deployed.')
 param location string = deployment().location
 
+@description('Github Personal Access Token')
+@secure()
+param pat string
+
 @description('The Prefix for the Resources')
 param prefix string = 'samples'
 
@@ -14,7 +18,6 @@ resource rGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   location: location
 }
 
-/*
 module cosmos 'modules/cosmos.bicep' = {
   scope: resourceGroup(rGroup.name)
   name: '${deployment().name}-cosmos'
@@ -24,7 +27,6 @@ module cosmos 'modules/cosmos.bicep' = {
     isServerless: false
   }
 }
-*/
 
 module azfunction 'modules/azfunction.bicep' = {
   scope: resourceGroup(rGroup.name)
@@ -32,7 +34,7 @@ module azfunction 'modules/azfunction.bicep' = {
   params: {
     location: location
     prefix: prefix
-    //cosmosDBAccountName: cosmos.outputs.cosmosDBAccountName
+    cosmosDBAccountName: cosmos.outputs.cosmosDBAccountName
   }
 }
 
@@ -42,5 +44,6 @@ module staticwebapp 'modules/staticwebapp.bicep' = {
   params: {
     prefix: prefix
     location: location
+    pat: pat
   }
 }
