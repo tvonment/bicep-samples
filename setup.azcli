@@ -8,5 +8,3 @@ az account show
 az account set --subscription MPN150
 az deployment sub what-if --template-file main.bicep -l eastus2 -n swa-func-us
 az deployment sub create --template-file main.bicep -l eastus2 -n swa-func-us
-
-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
