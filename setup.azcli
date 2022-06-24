@@ -6,4 +6,6 @@ az bicep install && az bicep upgrade
 az login --use-device-code
 az account show
 az account set --subscription MPN150
-az deployment sub create --template-file main.bicep -l switzerlandnorth
+az group create --location switzerlandnorth --name 'rg-strg'
+az deployment group what-if --template-file main.bicep --resource-group 'rg-strg'
+az deployment group create --template-file main.bicep --resource-group 'rg-strg'
