@@ -37,6 +37,7 @@ module cdn 'modules/vault.bicep' = {
   scope: resourceGroup(rGroup.name)
   name: '${deployment().name}-vault'
   params: {
-
+    prefix: prefix
+    location: location
   }
 }
