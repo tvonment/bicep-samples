@@ -7,9 +7,7 @@ param location string = deployment().location
 param prefix string = 'bicep-samples'
 
 @description('Name of the Resource Group')
-param rGroupName string = 'rg-${prefix}-webapp-cosmos-cdn'
-
-var deployCdn = true
+param rGroupName string = 'rg-${prefix}-webapp-cosmos-vault'
 
 resource rGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: rGroupName
@@ -35,11 +33,10 @@ module webapp 'modules/webapp.bicep' = {
   }
 }
 
-module cdn 'modules/cdn.bicep' = if (deployCdn) {
+module cdn 'modules/vault.bicep' = {
   scope: resourceGroup(rGroup.name)
-  name: '${deployment().name}-cdn'
+  name: '${deployment().name}-vault'
   params: {
-    originHostName: webapp.outputs.appServiceAppHostName
-    prefix: prefix
+
   }
 }
