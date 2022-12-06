@@ -6,6 +6,6 @@ az bicep install && az bicep upgrade
 az login --use-device-code
 az account show
 az account set --subscription MPN150
-az group create --location westeurope --name 'rg-vms'
-az deployment group what-if --template-file main.bicep --resource-group 'rg-vms'
-az deployment group create --template-file main.bicep --resource-group 'rg-vms'
+az group create --location westeurope --name 'msdef-client-vms'
+az deployment group what-if --template-file main.bicep --resource-group 'msdef-client-vms'
+az deployment group create --template-file main.bicep --resource-group 'msdef-client-vms'

@@ -1,10 +1,10 @@
 @description('The Azure region into which the resources should be deployed.')
 param location string = resourceGroup().location
 @description('The name-prefix for the resources.')
-param prefix string = 'tvm'
+@maxLength(6)
+param prefix string = 'msdef'
 @description('Count of VM Clients')
-param count int = 3
-
+param count int = 4
 var subnetName = '${prefix}-vm-subnet'
 
 resource vnet 'Microsoft.Network/virtualNetworks@2022-07-01' = {
@@ -92,7 +92,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2022-07-01' = {
 }
 
 resource vault 'Microsoft.KeyVault/vaults@2022-07-01' = {
-  name: '${prefix}-vault-${uniqueString(resourceGroup().id)}'
+  name: '${prefix}-vlt-${uniqueString(resourceGroup().id)}'
   location: location
   properties: {
     accessPolicies: []
